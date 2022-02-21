@@ -689,7 +689,7 @@ pre.trace {
   color: #999;
   min-width: 1160px;
   border-top: solid 1px #172036;
-  position: absolute;
+  position: relative;
   width: 100%;
   bottom: -219px;
   left: 0;
