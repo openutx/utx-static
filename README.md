@@ -1,6 +1,6 @@
 # UTX CDN Files
 
-![](https://files.mdnice.com/user/17535/e7c69d65-c488-4640-9832-acc737fea79f.png)
+![](https://cdn.jsdelivr.net/gh/openutx/static/image/utx.png)
 
 ## 简介
 
