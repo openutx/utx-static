@@ -1,6 +1,6 @@
 Lang.prototype.pack.zh = {
 	"token": {
-		"Airtest Report": "Airtest 报告",
+		"UTX Report": "UTX 报告",
 		"script running report": "脚本运行报告",
         "Contact Us": "联系我们",
 		"I am sorry, this log file is empty!": "你没有眼花，这个Log文件就是一片空白",
@@ -71,6 +71,5 @@ Lang.prototype.pack.zh = {
 		"Status:": "结果：",
 		"Total": "共",
 		"Warning: No steps": "警告：没有步骤",
-		"© 1997 - 2019 NetEase, Inc. All Rights Reserved.": "© 1997 - 2019 网易公司版权所有"
 	}
 };

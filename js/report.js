@@ -3,8 +3,8 @@
  * @Author: Era Chen
  * @Email: chenjiyun@corp.netease.com
  * @Date: 2019-08-08 17:41:44
- * @LastEditors  : Era Chen
- * @LastEditTime : 2020-01-09 16:53:46
+ * @LastEditors  : Lijiawei
+ * @LastEditTime : 2022-04-02 13:15:46
  */
 function StepPannel(data, root){
   this.data = data
@@ -320,44 +320,44 @@ function StepPannel(data, root){
     }
   }
 
-  this.getStepRightArgs = function(step){
+  this.getStepRightArgs = function(step) {
     // 操作的参数
-    try{
+    try {
       argHtml = ''
-      if(step.code){
-        for(var i=0; i < step.code.args.length; i++){
+      if (step.code) {
+        for (var i = 0; i < step.code.args.length; i++) {
           arg = step.code.args[i]
-          if(arg.image){
+          if (arg.image) {
             argHtml += ('<img class="crop_image desc" data-width="%s" data-height="%s" src="%s" title="%s">' +
-                    '<p class="desc">resolution: %s</p>')
-                    .format(arg.resolution[0], arg.resolution[1], arg.image, arg.image, arg.value.resolution)
-          }else{
+                '<p class="desc">resolution: %s</p>')
+                .format(arg.resolution[0], arg.resolution[1], arg.image, arg.image, arg.value.resolution)
+          } else {
             val = typeof arg.value == 'object' ? JSON.stringify(arg.value) : arg.value
-            argHtml += '<p class="desc">%s: %s</p>'.format(arg.key,val)
+            argHtml += '<p class="desc">%s: %s</p>'.format(arg.key, val)
           }
         }
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e)
     }
 
     // 相似度
-    if(step.screen && step.screen.confidence){
+    if (step.screen && step.screen.confidence) {
       argHtml += '<p class="desc"><span class="point glyphicon glyphicon-play"></span><span lang="en">Confidence: </span>%s</p>'.format(step.screen.confidence)
     }
 
-    argHtml =  argHtml || '<p class="desc">None</p>'
+    argHtml = argHtml || '<p class="desc">None</p>'
     argHtml = "<div class='fluid infos'>" + argHtml + "</div>"
-    argHtml += "<div class='fluid screens'>" + this.getStepRightScrren(step) + "</div>"
+    argHtml += "<div class='fluid screens'>" + this.getStepRightScreen(step) + "</div>"
     argHtml += "<div class='fluid traces'>" + this.getStepRightTrace(step) + "</div>"
     return "<div class='step-args'><div class='bold'>Args:</div>" + argHtml + "</div>"
   }
 
-  this.getStepRightScrren = function(step){
+  this.getStepRightScreen = function(step){
     if(step.screen && step.screen.src){
       var src = step.screen.src
       // 截屏
-      var img = '<img class="screen" data-src="%s" src="%s" title="%s">'.format(src, src, src)
+      var img = '<img class="screen" data-src="%s" src="%s" title="%s" onerror="hideFancybox(this);">'.format(src, src, src)
 
       // 点击位置
       var targets = ''
@@ -379,7 +379,7 @@ function StepPannel(data, root){
                     '<div class="end"></div>' +
                   '</div>').format(this.currentStep, rect)
       }
-      
+
       // 还有个rect <!-- rect area -->
       var rectors = ''
       for(var i=0;i<step.screen.rect.length; i++){
@@ -397,8 +397,9 @@ function StepPannel(data, root){
   }
 
   this.getStepRightTrace = function(step){
-    if(step.traceback){
-      return '<div class="desc"><pre class="trace"><code class="python">%s</code></pre></div>'.format(step.traceback)
+    if(step.traceback || step.log){
+      var logMessage = step.traceback || '' + step.log || '';
+      return '<div class="bold">Logs:</div><div class="desc"><pre class="trace"><code class="python">%s</code></pre></div>'.format(logMessage)
     } else{
       return ""
     }
@@ -535,7 +536,7 @@ function StepPannel(data, root){
   }
 
   this.init_pagenation = function(){
-    //生成分页控件  
+    //生成分页控件
     this.paging = new Paging();
     var that = this
     var list_len = this.steps.length
@@ -610,15 +611,15 @@ String.prototype.format= function(){
   });
 }
 
-Date.prototype.Format = function (fmt) { //author: meizz 
+Date.prototype.Format = function (fmt) { //author: meizz
   var o = {
-    "M+": this.getMonth() + 1, //月份 
-    "d+": this.getDate(), //日 
-    "h+": this.getHours(), //小时 
-    "m+": this.getMinutes(), //分 
-    "s+": this.getSeconds(), //秒 
-    "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
-    "S": this.getMilliseconds() //毫秒 
+    "M+": this.getMonth() + 1, //月份
+    "d+": this.getDate(), //日
+    "h+": this.getHours(), //小时
+    "m+": this.getMinutes(), //分
+    "s+": this.getSeconds(), //秒
+    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+    "S": this.getMilliseconds() //毫秒
   };
   if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
   for (var k in o)
@@ -780,6 +781,11 @@ function init_page(){
   $('.summary .info-sub.start').html(getFormatDate(data.run_start))
   $('.summary .info-sub.time').html(getFormatTime(data.run_start) + '-' + getFormatTime(data.run_end))
   $('.summary .info-value.duration').html(getFormatDuration(getDelta(data.run_end, data.run_start)))
+}
+
+function hideFancybox(img) {
+  // 图片加载失败的情况下，隐藏整个div
+  $(img).parent().hide();
 }
 
 $(function(){
